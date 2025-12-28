@@ -23,7 +23,7 @@ type TAuthStore = {
   isLoggingIn: boolean;
   isSigningUp: boolean;
   isCheckingAuth: boolean;
-  checkUser: () => void;
+  checkUser: (redirectToLogin: () => void) => void;
   signup: (data: TsignUpFormData) => void;
   login: (data: TloginFormData) => void;
   logout: () => void;
@@ -64,7 +64,7 @@ export const useAuthStore = create<TAuthStore>((set) => ({
     set({ currUser: user });
   },
 
-  checkUser: async function () {
+  checkUser: async function (redirectToLogin) {
     try {
       set({ isCheckingAuth: true });
       const { data } = await myAxios.get("/auth/check");
@@ -74,7 +74,9 @@ export const useAuthStore = create<TAuthStore>((set) => ({
       }
 
     } catch (err) {
+
       console.log(err);
+      redirectToLogin()
     } finally {
       set({ isCheckingAuth: false });
     }

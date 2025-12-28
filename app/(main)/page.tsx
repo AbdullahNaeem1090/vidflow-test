@@ -6,14 +6,14 @@ import { useVideoStore } from "@/Store/videoStore";
 import VideoCard from "@/page-components/Home/video-card";
 import Loader from "@/page-components/Loader";
 
-import { useAuthStore } from "@/Store/authStore";
+
 
 export default function HomePage() {
   const { HomeVideos, fetchVideos, isfetchingHomeVideos, hasMore } =
     useVideoStore();
   const { ref, inView } = useInView();
 
-  const {currUser}=useAuthStore();
+  
 
   useEffect(() => {
     if (HomeVideos.length === 0) fetchVideos();
@@ -22,12 +22,6 @@ export default function HomePage() {
   useEffect(() => {
     if (inView && hasMore) fetchVideos();
   }, [inView, hasMore, fetchVideos]);
-
-
-
-if(!currUser){
-  return <Loader />
-}
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full ">
