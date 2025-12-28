@@ -11,16 +11,29 @@ import { AppSidebar } from "@/page-components/sidebar/AppSidebar"
 import SearchBar from "@/page-components/Home/Searchbar"
 import { useEffect } from "react"
 import { useAuthStore } from "@/Store/authStore"
+import { useRouter } from "next/navigation"
+import Loader from "@/page-components/Loader"
 
 
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-const {checkUser,currUser}=useAuthStore()
+const {currUser}=useAuthStore()
+  const router = useRouter();
 
   const isMobile = useIsMobile()
-  useEffect(()=>{
-if(!currUser) checkUser()
-  },[currUser,checkUser])
+//   useEffect(()=>{
+// if(!currUser) checkUser()
+//   },[currUser,checkUser])
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) router.push("/login");
+    console.log("running")
+  }, [router]);
+
+  if(!currUser){
+    return <Loader />
+  }
 
   return (
     <SidebarProvider>

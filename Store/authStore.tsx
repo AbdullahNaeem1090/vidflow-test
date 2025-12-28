@@ -68,7 +68,11 @@ export const useAuthStore = create<TAuthStore>((set) => ({
     try {
       set({ isCheckingAuth: true });
       const { data } = await myAxios.get("/auth/check");
-      set({ currUser: data.data });
+      if(data.success){
+        set({ currUser: data.data });
+          localStorage.setItem("accessToken", data.accessToken);
+      }
+
     } catch (err) {
       console.log(err);
     } finally {
@@ -107,6 +111,7 @@ export const useAuthStore = create<TAuthStore>((set) => ({
 
       if (data.success) {
         set({ currUser: data.data });
+        localStorage.setItem("accessToken", data.accessToken);
         toast.success("Login Successful");
       }
     } catch (err: unknown) {
@@ -139,10 +144,10 @@ export const useAuthStore = create<TAuthStore>((set) => ({
 
   logout: async function () {
     try {
-      console.log("logoitfdx");
       const { data } = await myAxios.post("/auth/logout");
       if (data.success) {
         set({ currUser: null });
+        localStorage.removeItem("accessToken");
         toast.success("Logged out Successfully");
         window.location.href = "/login";
       }

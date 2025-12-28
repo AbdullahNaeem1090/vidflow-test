@@ -2,23 +2,24 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const accessToken = req.cookies.get("accessToken")?.value;
-  const { pathname } = req.nextUrl;
+  // const accessToken = localStorage.getItem("accessToken");
+  // const { pathname } = req.nextUrl;
 
-  const publicRoutes = ["/login", "/sign-up"];
+  // const publicRoutes = ["/login", "/sign-up"];
 
+  // console.log(accessToken);
   
 
-  // not logged in → block protected routes
-  if (!accessToken && !publicRoutes.includes(pathname)) {
+  // // not logged in → block protected routes
+  // if (!accessToken && !publicRoutes.includes(pathname)) {
 
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // }
 
-  // logged in → block auth pages
-  if (accessToken && publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
+  // // logged in → block auth pages
+  // if (accessToken && publicRoutes.includes(pathname)) {
+  //   return NextResponse.redirect(new URL("/", req.url));
+  // }
 
   return NextResponse.next();
 }
