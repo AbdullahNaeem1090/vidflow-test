@@ -6,7 +6,7 @@ export type UploadResult = {
   publicUrl: string
 }
 
-export function useUploader(serverBase = "http://localhost:5000") {
+export function useUploader(serverBase = process.env.NEXT_PUBLIC_API_URL) {
   const xhrRef = useRef<XMLHttpRequest | null>(null)
   const [progress, setProgress] = useState<number>(0)
   const [isUploading, setIsUploading] = useState<boolean>(false)
