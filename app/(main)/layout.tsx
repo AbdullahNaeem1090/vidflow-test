@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
 import { AppSidebar } from "@/page-components/sidebar/AppSidebar"
 import SearchBar from "@/page-components/Home/Searchbar"
-import { useCallback, useEffect } from "react"
+import {  useEffect } from "react"
 import { useAuthStore } from "@/Store/authStore"
 import { useRouter } from "next/navigation"
 import Loader from "@/page-components/Loader"
@@ -21,15 +21,15 @@ const {currUser,checkUser}=useAuthStore()
   const router = useRouter();
 
 
-const redirectToLogin = useCallback(() => {
-  router.push("/login");
-}, [router]);
+// const redirectToLogin = useCallback(() => {
+//   router.push("/login");
+// }, [router]);
 
 const isMobile = useIsMobile();
 
 useEffect(() => {
-  if (!currUser) checkUser(redirectToLogin);
-}, [currUser, checkUser, redirectToLogin]);
+  if (!currUser) checkUser();
+}, [currUser,checkUser]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");

@@ -13,8 +13,6 @@ export default function HomePage() {
     useVideoStore();
   const { ref, inView } = useInView();
 
-  
-
   useEffect(() => {
     if (HomeVideos.length === 0) fetchVideos();
   }, [fetchVideos, HomeVideos.length]);
