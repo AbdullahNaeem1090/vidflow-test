@@ -35,7 +35,7 @@ export default function HomePage() {
             <Loader />
           ) : hasMore ? (
             <span className="text-gray-500 font-medium">
-              Scroll to load more
+              
             </span>
           ) : (
             <span className="text-gray-400 font-medium">No more videos</span>
