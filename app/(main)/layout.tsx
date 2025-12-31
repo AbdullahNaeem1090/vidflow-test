@@ -32,7 +32,9 @@ useEffect(() => {
 }, [currUser,checkUser]);
 
   useEffect(() => {
-   if(!isLoggedIn) router.replace("/login")
+   if(!isLoggedIn && !localStorage.getItem("accessToken")){
+    router.replace("/login")
+   } 
   }, [isLoggedIn,router]);
 
   if(!currUser){
