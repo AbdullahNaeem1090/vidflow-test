@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { videoUploadSchema } from "@/zod/video-schema"
 import type { VideoUploadFormData } from "@/types/video.types"
 import { useVideoStore } from "@/Store/videoStore"
+import { toast } from "sonner"
 
 
 export function VideoUploadForm() {
@@ -71,6 +72,7 @@ const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 
   const onSubmit = async (data: VideoUploadFormData) => {
+    toast.info("If Upload Successfull , Reload the app to see the fresh content.")
     await SaveVideo(uploadFile,data,form.reset)
   }
 

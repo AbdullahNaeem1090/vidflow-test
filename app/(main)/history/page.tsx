@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { WatchHistoryCard } from "@/page-components/history/watch-history"
 import { myAxios } from "@/lib/axios" // ✅ your axios instance
+import Loader from "@/page-components/Loader"
 
 interface HistoryItem {
   id: string
@@ -81,9 +82,7 @@ export default function WatchHistoryPage() {
   // ==============================
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <Clock className="h-8 w-8 animate-spin text-muted-foreground" />
-      </main>
+      <Loader/>
     )
   }
 
