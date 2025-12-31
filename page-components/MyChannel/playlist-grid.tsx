@@ -27,13 +27,12 @@ import { PlaylistPreview } from "@/types/playlist.types"
 
 
 export function PlaylistGrid({playlists}:{playlists:PlaylistPreview[]}) {
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   
 
-  const handleDelete = (id: number) => {
+  const handleDelete = () => {
     setDeleteConfirm(null)
-    toast("Playlist deleted successfully")
-    console.log(id)
+
   }
 
   const handleUpdate = () => {
@@ -134,7 +133,7 @@ export function PlaylistGrid({playlists}:{playlists:PlaylistPreview[]}) {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => deleteConfirm !== null && handleDelete(deleteConfirm)}
+              onClick={() => deleteConfirm !== null && handleDelete()}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Delete
