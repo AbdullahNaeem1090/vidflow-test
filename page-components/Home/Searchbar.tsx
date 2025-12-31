@@ -68,7 +68,7 @@ export default function SearchBar({
     e.preventDefault();
     if (query.trim()) {
       search(query.trim());
-      router.push(`/search-results`);
+      router.push(`/search/${query.trim()}`);
       setShowSuggestions(false);
       inputRef.current?.blur();
     }

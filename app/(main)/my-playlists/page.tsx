@@ -104,7 +104,7 @@ export default function PlaylistsPage() {
             {isFetchingVideos ? (
               <Loader />
             ) : (
-              <HorizontalPlaylistVideoList videos={currentPlaylistVideos} onRemove={removeVideo} />
+              <HorizontalPlaylistVideoList canRemove={true} videos={currentPlaylistVideos} onRemove={removeVideo} />
             )}
           </section>
         )}

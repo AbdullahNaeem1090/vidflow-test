@@ -49,7 +49,7 @@ export default function WatchPage() {
 
 console.log(Playlists)
   return (
-    <main className="mx-auto max-w-350 p-4 ">
+    <main className="mx-auto w-full p-4 ">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_420px]">
         {/* LEFT SIDE */}
         <section className="space-y-4">

@@ -7,11 +7,13 @@ import { PlaylistCard } from "@/page-components/Other-Channels/playlist-card";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { myAxios } from "@/lib/axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ChannelVideo } from "@/types/video.types";
 import { PlaylistPreview } from "@/types/playlist.types";
 import Loader from "@/page-components/Loader";
+import { PlaylistVideo } from "@/page-components/Playlists/playlist-videos";
+import HorizontalPlaylistVideoList from "@/page-components/Playlists/playlist-videos";
 
 interface channelData {
   name: string;
@@ -24,12 +26,19 @@ interface channelData {
 }
 
 export default function ChannelPage() {
+  const router=useRouter()
   const { id } = useParams();
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [channelData, setChannelData] = useState<channelData | null>(null);
   const [subscribed, setSubscribed] = useState<boolean>(false);
 
-  console.log(channelData?.isSubscribed);
+  const [currentPlaylistVideos, setCurrentPlaylistVideos] = useState<
+    PlaylistVideo[]
+  >([]);
+  const [isFetchingVideos, setIsFetchingVideos] = useState(false);
+  const [activePlaylistName, setActivePlaylistName] = useState<string | null>(
+    null
+  );
 
   const getChannelData = useCallback(async () => {
     setIsFetchingData(true);
@@ -48,6 +57,25 @@ export default function ChannelPage() {
       setIsFetchingData(false);
     }
   }, [id]);
+
+  const getPlaylistVideos = async (playlistId: string, name: string) => {
+    try {
+      setIsFetchingVideos(true);
+      setActivePlaylistName(name);
+
+      const { data } = await myAxios.get(
+        `/playlist/playlistVideos/${playlistId}`
+      );
+
+      if (data.success) {
+        setCurrentPlaylistVideos(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFetchingVideos(false);
+    }
+  };
 
   async function toggleSubscribe() {
     try {
@@ -82,7 +110,7 @@ export default function ChannelPage() {
           <Image
             height={200}
             width={500}
-            src={channelData.bannerImage|| "/banner.png"}
+            src={channelData.bannerImage || "/banner.png"}
             alt="Channel Banner"
             className="h-full w-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
           />
@@ -136,65 +164,58 @@ export default function ChannelPage() {
             <TabsList className="h-auto w-full justify-start rounded-none border-b bg-transparent p-0 gap-8">
               <TabsTrigger
                 value="videos"
-                className="rounded-none border-b-2 border-transparent px-2 pb-4 pt-2 text-base font-medium data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground"
+                className="rounded-t-lg border-b-2 border-transparent px-2 pb-4 pt-2 text-base font-medium data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground"
               >
                 Videos
               </TabsTrigger>
               <TabsTrigger
                 value="playlists"
-                className="rounded-none border-b-2 border-transparent px-2 pb-4 pt-2 text-base font-medium data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground"
+                className="rounded-t-lg border-b-2 border-transparent px-2 pb-4 pt-2 text-base font-medium data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground"
               >
                 Playlists
-              </TabsTrigger>
-              <TabsTrigger
-                value="about"
-                className="rounded-none border-b-2 border-transparent px-2 pb-4 pt-2 text-base font-medium data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground"
-              >
-                About
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="videos" className="mt-8">
               <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {channelData.videos.map((video) => (
-                  <VideoCard key={video.id} video={video} />
+                  <div key={video.id} onClick={()=>router.push(`watch-video/${video.id}`)}>
+                  <VideoCard  video={video} />
+                  </div>
                 ))}
               </div>
             </TabsContent>
 
             <TabsContent value="playlists" className="mt-8">
               <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {channelData.playlists.map((playlist) => (
-                  <PlaylistCard key={playlist.id} playlist={playlist} />
+                {channelData.playlists.map((playlist, i) => (
+                  <div
+                    key={i}
+                    onClick={() =>
+                      getPlaylistVideos(playlist.id, playlist.title)
+                    }
+                  >
+                    <PlaylistCard key={playlist.id} playlist={playlist} />
+                  </div>
                 ))}
               </div>
-            </TabsContent>
+              {activePlaylistName && (
+                <section className=" mt-5 p-8 border border-border rounded-3xl ">
+                  <h2 className="text-xl font-semibold mb-4">
+                    {activePlaylistName}
+                  </h2>
 
-            <TabsContent value="about" className="mt-8">
-              <div className="mx-auto max-w-3xl py-8">
-                <h2 className="text-2xl font-bold">About {channelData.name}</h2>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  Im a developer passionate about crafting accessible,
-                  pixel-perfect user interfaces that blend thoughtful design
-                  with robust engineering. My favorite work lies at the
-                  intersection of design and development, creating experiences
-                  that not only look great but are meticulously built for
-                  performance and usability.
-                </p>
-                <div className="mt-8 border-t pt-8">
-                  <h3 className="font-semibold">Stats</h3>
-                  <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">Joined</p>
-                      <p className="font-medium">Oct 12, 2018</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Total views</p>
-                      <p className="font-medium">12,456,789 views</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  {isFetchingVideos ? (
+                    <Loader />
+                  ) : (
+                    <HorizontalPlaylistVideoList
+                      canRemove={false}
+                      videos={currentPlaylistVideos}
+                      onRemove={() => {}}
+                    />
+                  )}
+                </section>
+              )}
             </TabsContent>
           </Tabs>
         </div>

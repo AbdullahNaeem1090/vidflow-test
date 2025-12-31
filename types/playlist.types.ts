@@ -10,7 +10,7 @@ export interface IPlaylist{
 
 
 export interface  PlaylistPreview {
-  id: number
+  id: string
   title: string
   thumbnail: string
   videoCount: number

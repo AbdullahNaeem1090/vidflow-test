@@ -1,34 +1,49 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import {  Trash } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useRouter } from "next/navigation"
+import Image from "next/image";
+import { Trash } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 export interface PlaylistVideo {
-  id: string
-  thumbnail: string
-  duration: string
-  title: string
-  channel: string
-  views: string
-  timeAgo: string
-  channelPic: string
+  id: string;
+  thumbnail: string;
+  duration: string;
+  title: string;
+  channel: string;
+  views: string;
+  timeAgo: string;
+  channelPic: string;
 }
 
 interface Props {
-  videos: PlaylistVideo[]
-  onRemove: (id: string) => void
+  canRemove: boolean;
+  videos: PlaylistVideo[];
+  onRemove: (id: string) => void;
 }
 
-export default function HorizontalVideoRow({ videos, onRemove }: Props) {
+function formatDuration(sec: string): string {
+  const seconds = Number(sec);
+  if (!seconds || seconds < 0) return "0:00";
+
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
+export default function HorizontalVideoRow({
+  videos,
+  onRemove,
+  canRemove,
+}: Props) {
   const router = useRouter();
   return (
     <div className="flex flex-col">
       {videos.map((video) => (
         <div
           key={video.id}
-onClick={()=>router.push(`/watch-video/${video.id}`)}
+          onClick={() => router.push(`/watch-video/${video.id}`)}
           className="flex gap-4 p-2 cursor-pointer hover:bg-white/5 transition rounded-md"
         >
           {/* Thumbnail */}
@@ -40,7 +55,7 @@ onClick={()=>router.push(`/watch-video/${video.id}`)}
               className="object-cover"
             />
             <span className="absolute bottom-1 right-1 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded">
-              {video.duration}
+              {formatDuration(video.duration)}
             </span>
           </div>
 
@@ -69,13 +84,18 @@ onClick={()=>router.push(`/watch-video/${video.id}`)}
             </div>
 
             {/* More icon */}
-            <Trash onClick={(e) => {
-    e.stopPropagation()   
-    onRemove(video.id)    
-  }}className="h-5 w-5  hover:text-muted-foreground shrink-0 mt-1" />
+            {canRemove && (
+              <Trash
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove(video.id);
+                }}
+                className="h-5 w-5  hover:text-muted-foreground shrink-0 mt-1"
+              />
+            )}
           </div>
         </div>
       ))}
     </div>
-  )
+  );
 }

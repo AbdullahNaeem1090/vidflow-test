@@ -47,6 +47,7 @@ export function SidebarProfile({
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const {logout,currUser}= useAuthStore();
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -99,7 +100,7 @@ export function SidebarProfile({
                     {currUser?.username??user.name}
                   </span>
                   <span className="truncate text-xs">
-                    {currUser?.username??user.email}
+                    {currUser?.email}
                   </span>
                 </div>
               </div>
