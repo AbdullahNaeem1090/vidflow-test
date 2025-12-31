@@ -19,6 +19,7 @@ type ChannelDataResponse = {
   playlists: PlaylistPreview[];
 };
 type TAuthStore = {
+  isLoggedIn:boolean;
   currUser: null | User;
   isLoggingIn: boolean;
   isSigningUp: boolean;
@@ -48,6 +49,7 @@ type TAuthStore = {
 };
 
 export const useAuthStore = create<TAuthStore>((set) => ({
+  isLoggedIn:false,
   currUser: null,
   isLoggingIn: false,
   isSigningUp: false,
@@ -71,6 +73,9 @@ export const useAuthStore = create<TAuthStore>((set) => ({
       if(data.success){
         set({ currUser: data.data });
       }
+      if(localStorage.getItem("accessToken")) set({isLoggedIn:true})
+      else set({isLoggedIn:false})
+      
     } catch (err) {
       console.log(err);
       // redirectToLogin()
@@ -109,6 +114,7 @@ export const useAuthStore = create<TAuthStore>((set) => ({
       const { data } = await myAxios.post("/auth/login", formData);
 
       if (data.success) {
+        set({isLoggedIn:true})
         set({ currUser: data.data });
         localStorage.setItem("accessToken", data.accessToken);
         toast.success("Login Successful");
@@ -145,6 +151,7 @@ export const useAuthStore = create<TAuthStore>((set) => ({
     try {
       const { data } = await myAxios.post("/auth/logout");
       if (data.success) {
+        set({isLoggedIn:false})
         set({ currUser: null });
         localStorage.removeItem("accessToken");
         toast.success("Logged out Successfully");

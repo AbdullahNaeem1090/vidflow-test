@@ -17,7 +17,7 @@ import Loader from "@/page-components/Loader"
 
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-const {currUser,checkUser}=useAuthStore()
+const {currUser,checkUser,isLoggedIn}=useAuthStore()
   const router = useRouter();
 
 
@@ -32,10 +32,8 @@ useEffect(() => {
 }, [currUser,checkUser]);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) router.push("/login");
-    console.log("running")
-  }, [router]);
+   if(!isLoggedIn) router.replace("/login")
+  }, [isLoggedIn,router]);
 
   if(!currUser){
     return <Loader />

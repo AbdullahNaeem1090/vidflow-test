@@ -1,18 +1,18 @@
 "use client"
 
 import LoginForm from "@/page-components/Login";
+import { useAuthStore } from "@/Store/authStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 
 export default function LoginPage() {
-
+const {isLoggedIn}=useAuthStore()
   const router = useRouter();
 
   useEffect(()=>{
-    const user=localStorage.getItem("accessToken")
-   if(user) router.replace("/")
-  }, [router])
+   if(isLoggedIn) router.replace("/")
+  }, [isLoggedIn,router])
 
   return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
