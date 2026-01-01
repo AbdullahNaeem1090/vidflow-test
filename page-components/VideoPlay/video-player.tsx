@@ -15,7 +15,7 @@ export function VideoPlayer({
   return (
     <div className={cn("w-full", className)}>
       <div className="aspect-video overflow-hidden rounded-lg bg-muted">
-        <video className="h-full w-full" controls playsInline preload="metadata" poster={poster}>
+        <video className="h-full w-full" controls playsInline autoPlay preload="metadata" poster={poster}>
           <source src={src} type="video/mp4" />
           {/* Fallback text for unsupported browsers */}
           {`Your browser does not support the video tag.`}
